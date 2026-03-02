@@ -1,9 +1,8 @@
 import { getMatchDetail } from "@/lib/api";
 import { ChevronLeft, Zap, Info } from "lucide-react";
 import Link from "next/link";
-import PageProps from 'next/types'; // Corrected import for PageProps
 
-export default async function MatchDetail({ params, searchParams }: PageProps<{ id: string }, { sport: string | string[] | undefined }>) {
+export default async function MatchDetail({ params, searchParams }: { params: { id: string }; searchParams: { sport: string | string[] | undefined } }) {
   // Ensure sport is a string, defaulting if undefined or array
   const sportParam = typeof searchParams.sport === 'string' ? searchParams.sport : (Array.isArray(searchParams.sport) ? searchParams.sport[0] : 'all');
   const match = await getMatchDetail(params.id, sportParam);
