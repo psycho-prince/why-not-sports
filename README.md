@@ -1,16 +1,16 @@
+# WhyNot Sports | Legal Sports Dashboard
+
+A high-performance, real-time sports scoreboard built with Next.js 14. 100% Rights-Compliant.
+
 ## Deploy to Render.com
 
 Deploy this project as a **Web Service** on Render.com for a seamless experience.
 
-1.  **Create Web Service:**
-    *   Go to your Render dashboard and click "+ New" → "Web Service".
-    *   Connect your GitHub repository containing this project.
-    *   Select your desired branch (e.g., `main`).
-2.  **Build and Deploy Settings:**
+1.  **Create a New Web Service** on Render and connect your GitHub repository.
+2.  **Build Settings:**
     *   **Runtime:** `Node`
-    *   **Build Command:** `npm ci && npm run build` (Using `npm ci` for a clean, reproducible install)
+    *   **Build Command:** `npm ci && npm run build` (This ensures a clean, reproducible install)
     *   **Start Command:** `node .next/standalone/server.js` (This command is specific to the `output: 'standalone'` configuration for optimized deployment.)
-    *   **Instance Type:** Start with the Free tier for testing, upgrade to Starter or higher for production.
 3.  **Environment Variables:** In the Render dashboard, under "Environment Variables", add:
     *   `CRICKET_API_KEY`: Your personal API key from cricketdata.org.
     *   `THE_SPORTSDB_KEY`: Set this to `1`.
