@@ -11,10 +11,10 @@ interface MatchDetailSearchParams {
   sport: string | string[] | undefined;
 }
 
-export default async function MatchDetail({ params, searchParams }: { params: MatchDetailParams; searchParams: MatchDetailSearchParams }) {
+export default function MatchDetail({ params, searchParams }: { params: MatchDetailParams; searchParams: MatchDetailSearchParams }) {
   // Ensure sport is a string, defaulting if undefined or array
   const sportParam = typeof searchParams.sport === 'string' ? searchParams.sport : (Array.isArray(searchParams.sport) ? searchParams.sport[0] : 'all');
-  const match = await getMatchDetail(params.id, sportParam);
+  const match = getMatchDetail(params.id, sportParam); // Removed await
 
   if (!match) return <div className="p-20 text-center uppercase font-black">Match data not found.</div>;
 
