@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import SportTabs from "@/components/SportTabs";
 import LiveMatchCard from "@/components/LiveMatchCard";
-import { SportType } from "@/lib/api";
+// Removed: import { SportType } from "@/lib/api"; // SportType is not directly used as a type here anymore
 import { Loader2 } from "lucide-react";
 
 export default function LiveBoard({ initialMatches }: { initialMatches: any[] }) {
-  const [sport, setSport] = useState<SportType>('all');
+  const [sport, setSport] = useState<string>('all'); // Changed type to string
   const [matches, setMatches] = useState<any[]>(initialMatches);
   const [loading, setLoading] = useState(false);
 
