@@ -1,28 +1,14 @@
-"use client";
-import { useEffect, useState } from "react";
 import SportTabs from "@/components/SportTabs";
 import LiveMatchCard from "@/components/LiveMatchCard";
-import { getLiveScores, SportType } from "@/lib/api";
-import { Zap, ArrowRight, Loader2, Globe } from "lucide-react";
+import { getLiveScores } from "@/lib/api";
+import LiveBoard from "./LiveBoard"; // We will create this client component
+import { Zap, ArrowRight, Globe } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
-  const [sport, setSport] = useState<SportType>('all');
-  const [matches, setMatches] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadData = async () => {
-    const data = await getLiveScores(sport);
-    setMatches(data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    setLoading(true);
-    loadData();
-    const interval = setInterval(loadData, 30000);
-    return () => clearInterval(interval);
-  }, [sport]);
+// This is now a Server Component
+export default async function Home() {
+  // 1. Initial data is fetched securely on the server
+  const initialMatches = await getLiveScores('all');
 
   return (
     <div className="max-w-7xl mx-auto px-6 pt-12 pb-20">
@@ -43,25 +29,9 @@ export default function Home() {
           </Link>
         </div>
       </div>
-      <SportTabs active={sport} onChange={setSport} />
-      <div className="flex items-center justify-between mb-12 mt-4">
-        <div className="flex items-center space-x-4">
-          <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-          <h2 className="text-4xl font-black uppercase tracking-tighter italic text-white">Live Board</h2>
-        </div>
-      </div>
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-40">
-          <Loader2 className="animate-spin text-green-500 mb-4" size={40} />
-          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Fetching Data...</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {matches.length > 0 ? matches.map((match) => <LiveMatchCard key={match.id} match={match} />) : (
-            <div className="col-span-full py-40 text-center rounded-[3rem] border-2 border-dashed border-zinc-900 bg-zinc-950/30 text-zinc-600 font-black uppercase italic">No Active Games</div>
-          )}
-        </div>
-      )}
+      
+      {/* 2. The LiveBoard is a client component that handles refresh */}
+      <LiveBoard initialMatches={initialMatches} />
     </div>
   );
 }
