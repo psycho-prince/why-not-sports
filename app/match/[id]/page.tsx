@@ -1,8 +1,9 @@
 import { getMatchDetail } from "@/lib/api";
 import { ChevronLeft, Zap, Info } from "lucide-react";
 import Link from "next/link";
+import { PageProps } from 'next/types';
 
-export default async function MatchDetail({ params, searchParams }: { params: { id: string }, searchParams: { sport: string } }) {
+export default async function MatchDetail({ params, searchParams }: PageProps<{ id: string }, { sport: string }>) {
   const match = await getMatchDetail(params.id, searchParams.sport);
   if (!match) return <div className="p-20 text-center uppercase font-black">Match data not found.</div>;
 
