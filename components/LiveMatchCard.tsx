@@ -10,7 +10,7 @@ export default function LiveMatchCard({ match }: { match: any }) {
   const league = isCricket ? "ICC World Events" : (match.strLeague || "Pro League");
 
   return (
-    <Link href={isCricket ? \`/match/\${match.id}?sport=cricket\` : \`/match/\${match.id}?sport=football\`} className="group block">
+    <Link href={isCricket ? `/match/${match.id}?sport=cricket` : `/match/${match.id}?sport=football`} className="group block">
       <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 hover:border-green-500/50 transition-all duration-300">
         <div className="flex justify-between items-center mb-6">
           <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">{league}</span>
