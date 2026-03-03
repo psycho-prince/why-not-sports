@@ -11,7 +11,13 @@ interface MatchDetailSearchParams {
   sport: string | string[] | undefined;
 }
 
-export default async function MatchDetail({ params, searchParams }: { params: MatchDetailParams; searchParams: MatchDetailSearchParams }) {
+export default async function MatchDetail(props: { 
+  params: Promise<MatchDetailParams>; 
+  searchParams: Promise<MatchDetailSearchParams> 
+}) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+  
   // Ensure sport is a string, defaulting if undefined or array
   const sportParam = typeof searchParams.sport === 'string' ? searchParams.sport : (Array.isArray(searchParams.sport) ? searchParams.sport[0] : 'all');
   const match = await getMatchDetail(params.id, sportParam); // Ensure await is present
