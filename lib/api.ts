@@ -49,11 +49,11 @@ export interface UnifiedMatch {
 
 // --- Fetchers ---
 
-async function fetchWithCache(url: string, options: RequestInit = {}) {
-  // Respecting 100 req/day by caching for 60 seconds
+async function fetchWithNoStore(url: string, options: RequestInit = {}) {
+  // Always fetch fresh for live data
   return fetch(url, {
     ...options,
-    next: { revalidate: 60 } 
+    cache: 'no-store',
   });
 }
 
@@ -65,17 +65,25 @@ export async function getLiveScores(sport: SportType): Promise<UnifiedMatch[]> {
     if (sport === 'all' || sport === 'football') {
       const fbKey = process.env.API_FOOTBALL_KEY;
       if (fbKey && fbKey !== 'your_key_here') {
-        // Try Live first
-        let res = await fetchWithCache(`${FOOTBALL_API_BASE}/fixtures?live=all`, {
+        // Step 1: Try Live matches first
+        let res = await fetchWithNoStore(`${FOOTBALL_API_BASE}/fixtures?live=all`, {
           headers: { 'x-apisports-key': fbKey }
         });
         let data = await res.json();
         
-        // If no live, get today's fixtures
+        // Step 2: Fallback to today's fixtures if no live
         if (!data.response || data.response.length === 0) {
           const today = new Date().toISOString().split('T')[0];
-          res = await fetchWithCache(`${FOOTBALL_API_BASE}/fixtures?date=${today}`, {
+          res = await fetchWithNoStore(`${FOOTBALL_API_BASE}/fixtures?date=${today}`, {
             headers: { 'x-apisports-key': fbKey }
+          });
+          data = await res.json();
+        }
+
+        // Step 3: Extreme fallback to next 10 fixtures if today is empty
+        if (!data.response || data.response.length === 0) {
+          res = await fetchWithNoStore(`${FOOTBALL_API_BASE}/fixtures?next=10`, {
+             headers: { 'x-apisports-key': fbKey }
           });
           data = await res.json();
         }
@@ -105,7 +113,7 @@ export async function getLiveScores(sport: SportType): Promise<UnifiedMatch[]> {
     if (sport === 'all' || sport === 'cricket') {
       const apiKey = process.env.CRICKET_API_KEY;
       if (apiKey && apiKey !== 'your_free_key_here') {
-        const res = await fetchWithCache(`${CRICKET_BASE}/currentMatches?apikey=${apiKey}`);
+        const res = await fetchWithNoStore(`${CRICKET_BASE}/currentMatches?apikey=${apiKey}`);
         const data = await res.json();
         if (data.data) {
           results.push(...data.data.map((m: any) => ({
@@ -142,7 +150,8 @@ export async function getMatchDetail(id: string, sport: string) {
     const fbKey = process.env.API_FOOTBALL_KEY;
     if (sport === 'football' && fbKey) {
        const res = await fetch(`${FOOTBALL_API_BASE}/fixtures?id=${id}`, {
-         headers: { 'x-apisports-key': fbKey }
+         headers: { 'x-apisports-key': fbKey },
+         cache: 'no-store'
        });
        const data = await res.json();
        return data.response?.[0] || null;
@@ -165,7 +174,7 @@ export async function getRecentHighlights(): Promise<UnifiedMatch[]> {
 
     const res = await fetch(`${FOOTBALL_API_BASE}/fixtures?date=${dateStr}&status=FT`, {
       headers: { 'x-apisports-key': fbKey },
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: { revalidate: 3600 } // Highlights can be cached longer
     });
     const data = await res.json();
 

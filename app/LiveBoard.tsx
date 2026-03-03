@@ -73,7 +73,7 @@ export default function LiveBoard({ initialMatches }: { initialMatches: UnifiedM
           <p className="text-zinc-600 font-black uppercase italic tracking-widest text-sm">Syncing with World Events...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="live-board-results" role="tabpanel" aria-labelledby={`tab-${sport}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {matches.length > 0 ? (
             matches.map((match) => <LiveMatchCard key={`${match.sport}-${match.id}`} match={match} />)
           ) : (
