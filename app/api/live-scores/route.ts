@@ -7,8 +7,15 @@ export async function GET(request: Request) {
 
   try {
     const data = await getLiveScores(sport);
-    return NextResponse.json(data);
+    // Explicitly disabling server-side caching for the API route itself
+    // to ensure client fetches get fresh (or revalidated) data.
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'no-store, max-age=0'
+      }
+    });
   } catch (error) {
+    console.error("API Route Error:", error);
     return NextResponse.json({ error: 'Failed to fetch live scores' }, { status: 500 });
   }
 }

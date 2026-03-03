@@ -1,6 +1,7 @@
 "use client";
 
 import { Trophy, CircleDot, Disc, Activity, HelpCircle, Award } from "lucide-react";
+import Link from "next/link";
 
 interface SportTabsProps {
   active: string;
@@ -9,50 +10,53 @@ interface SportTabsProps {
 
 const sports = [
   { id: "all", name: "All Sports", icon: Activity },
-  { id: "cricket", name: "Cricket", icon: CircleDot },
   { id: "football", name: "Football", icon: Trophy },
+  { id: "cricket", name: "Cricket", icon: CircleDot },
   { id: "basketball", name: "Basketball", icon: Award },
   { id: "tennis", name: "Tennis", icon: Disc },
 ];
 
 export default function SportTabs({ active, onChange }: SportTabsProps) {
   return (
-    <div className="flex flex-wrap gap-2 pb-6 border-b">
-      {sports.map((sport) => {
-        const Icon = sport.icon;
-        const isActive = active === sport.id;
+    <div className="flex flex-wrap items-center gap-4 py-8 border-b border-zinc-900">
+      <div className="flex flex-wrap gap-3">
+        {sports.map((sport) => {
+          const Icon = sport.icon;
+          const isActive = active === sport.id;
 
-        return (
-          <button
-            key={sport.id}
-            onClick={() => onChange(sport.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors ${
-              isActive
-                ? "bg-primary text-primary-foreground border-primary"
-                : "hover:bg-accent"
-            }`}
-          >
-            <Icon className="w-4 h-4" />
-            {sport.name}
-          </button>
-        );
-      })}
+          return (
+            <button
+              key={sport.id}
+              onClick={() => onChange(sport.id)}
+              className={`flex items-center gap-3 px-6 py-3 rounded-2xl border transition-all duration-300 text-[10px] font-black uppercase tracking-widest ${
+                isActive
+                  ? "bg-green-600 text-white border-green-600 shadow-[0_0_20px_rgba(22,163,74,0.3)]"
+                  : "bg-zinc-950 text-zinc-500 border-zinc-800 hover:border-zinc-600 hover:text-white"
+              }`}
+            >
+              <Icon size={14} />
+              {sport.name}
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Separate pages */}
-      <a
-        href="/highlights"
-        className="flex items-center gap-2 px-4 py-2 rounded-full border hover:bg-accent transition-colors"
-      >
-        <Disc className="w-4 h-4" />
-        Highlights
-      </a>
-      <a
-        href="/watch-free-legally"
-        className="flex items-center gap-2 px-4 py-2 rounded-full border hover:bg-accent transition-colors"
-      >
-        <HelpCircle className="w-4 h-4" />
-        Guide
-      </a>
+      <div className="h-4 w-[1px] bg-zinc-800 mx-2 hidden md:block" />
+
+      <div className="flex gap-3">
+        <Link
+          href="/highlights"
+          className="flex items-center gap-3 px-6 py-3 rounded-2xl border bg-zinc-950 text-zinc-500 border-zinc-800 hover:border-green-600 hover:text-white transition-all duration-300 text-[10px] font-black uppercase tracking-widest"
+        >
+          <PlayCircle size={14} className="text-green-500" />
+          Highlights
+        </Link>
+      </div>
     </div>
   );
+}
+
+// Internal icon fix for missing import
+function PlayCircle({ size, className }: { size: number, className: string }) {
+    return <Disc size={size} className={className} />;
 }

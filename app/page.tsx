@@ -1,36 +1,41 @@
-import SportTabs from "@/components/SportTabs";
-import LiveMatchCard from "@/components/LiveMatchCard";
 import { getLiveScores } from "@/lib/api";
-import LiveBoard from "./LiveBoard"; // We will create this client component
-import { Zap, ArrowRight, Globe } from "lucide-react";
+import LiveBoard from "./LiveBoard";
+import { ArrowRight, Globe } from "lucide-react";
 import Link from "next/link";
 
-// This is now a Server Component
+// This is a Server Component that fetches initial data
 export default async function Home() {
-  // 1. Initial data is fetched securely on the server
+  // Fetch initial data for SSR/Speed
+  // If API keys are missing, this safely returns []
   const initialMatches = await getLiveScores('all');
 
   return (
     <div className="max-w-7xl mx-auto px-6 pt-12 pb-20">
-      <div className="relative rounded-[3rem] p-10 md:p-20 mb-16 overflow-hidden bg-zinc-900 border border-zinc-800">
+      <div className="relative rounded-[3.5rem] p-10 md:p-24 mb-16 overflow-hidden bg-zinc-900 border border-zinc-800">
         <div className="relative z-10 max-w-2xl">
           <div className="flex items-center space-x-3 text-green-500 mb-8">
-            <Globe size={20} className="animate-spin-slow" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Live 2026 World Events</span>
+            <Globe size={18} className="animate-spin-slow" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Real-Time World Sports</span>
           </div>
-          <h1 className="text-6xl md:text-8xl font-black mb-8 leading-[0.85] tracking-tighter italic uppercase">
-            Real Scores.<br /><span className="text-green-500">Legal Access.</span>
+          <h1 className="text-6xl md:text-[7rem] font-black mb-10 leading-[0.8] tracking-tighter italic uppercase">
+            Why Not <br />
+            <span className="text-green-500">Sports?</span>
           </h1>
-          <p className="text-zinc-400 text-lg md:text-xl mb-12 leading-relaxed font-medium">
-            No risks. Just live results and the ultimate guide to watching major sports legally for free.
+          <p className="text-zinc-400 text-lg md:text-2xl mb-14 leading-relaxed font-medium tracking-tight">
+            Stop digging for scores. We track live events from around the world and guide you to official, legal broadcasts.
           </p>
-          <Link href="/watch-free-legally" className="bg-white text-black px-10 py-5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest hover:bg-green-500 hover:text-white transition inline-flex items-center">
-            How to watch free <ArrowRight size={18} className="ml-3" />
-          </Link>
+          <div className="flex flex-wrap gap-6">
+            <Link href="/watch-free-legally" className="bg-white text-black px-12 py-6 rounded-[1.8rem] font-black text-xs uppercase tracking-widest hover:bg-green-500 hover:text-white transition-all transform hover:scale-105 inline-flex items-center shadow-2xl shadow-white/5">
+              Access Guide <ArrowRight size={20} className="ml-3" />
+            </Link>
+          </div>
         </div>
+        
+        {/* Decorative background element */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-green-500/5 to-transparent pointer-events-none" />
       </div>
       
-      {/* 2. The LiveBoard is a client component that handles refresh */}
+      {/* Client Component for live updates & filtering */}
       <LiveBoard initialMatches={initialMatches} />
     </div>
   );
