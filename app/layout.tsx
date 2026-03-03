@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { Trophy, ShieldCheck, PlayCircle, Calendar } from "lucide-react";
+import { Trophy, ShieldCheck, PlayCircle, Calendar, Heart } from "lucide-react";
 import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"], weight: ['400', '700', '900'] });
@@ -38,13 +38,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="min-h-screen">
             {children}
           </main>
-          <footer className="bg-gray-50 dark:bg-zinc-950 py-12 border-t border-gray-100 dark:border-zinc-900 mt-20">
+          <footer className="bg-gray-50 dark:bg-zinc-950 py-16 border-t border-gray-100 dark:border-zinc-900 mt-20">
             <div className="max-w-7xl mx-auto px-6 text-center">
-              <p className="text-sm font-bold text-gray-400 dark:text-zinc-600 uppercase tracking-widest mb-4">Made with ❤️ in Kerala | 100% Legal Sports</p>
-              <div className="flex justify-center gap-6 text-xs font-black uppercase tracking-[0.2em] text-gray-500 dark:text-zinc-500">
-                 <Link href="/matches" className="hover:text-green-500 transition">Scores</Link>
-                 <Link href="/highlights" className="hover:text-green-500 transition">Replays</Link>
-                 <Link href="/watch-free-legally" className="hover:text-green-500 transition">Legal</Link>
+              <div className="flex flex-col items-center gap-8">
+                <div className="space-y-2">
+                  <p className="text-sm font-bold text-gray-400 dark:text-zinc-600 uppercase tracking-widest">
+                    Developed with <Heart size={14} className="inline text-red-500 mx-1 fill-current" /> by <span className="text-green-600 dark:text-green-500">Prince T Philip</span>
+                  </p>
+                  <p className="text-[10px] font-black text-gray-300 dark:text-zinc-700 uppercase tracking-[0.3em]">Vaikom, Kerala | 100% Legal Sports</p>
+                </div>
+                
+                <div className="flex justify-center gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-zinc-500">
+                   <Link href="/matches" className="hover:text-green-500 transition">Scores</Link>
+                   <Link href="/highlights" className="hover:text-green-500 transition">Replays</Link>
+                   <Link href="/watch-free-legally" className="hover:text-green-500 transition">Legal</Link>
+                </div>
+
+                <a 
+                  href="https://buymeacoffee.com/Princephilip" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all flex items-center gap-3 shadow-xl shadow-yellow-400/20 hover:scale-105 active:scale-95"
+                >
+                  <span className="text-xl">☕</span> Buy me a coffee
+                </a>
               </div>
             </div>
           </footer>
