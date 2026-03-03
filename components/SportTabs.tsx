@@ -9,16 +9,16 @@ interface SportTabsProps {
 }
 
 const sports = [
-  { id: "all", name: "All Sports", icon: Activity, emoji: "🌍", color: "text-emerald-500" },
-  { id: "cricket", name: "Cricket", icon: CircleDot, emoji: "🏏", color: "text-orange-500" }, 
-  { id: "football", name: "Football", icon: Trophy, emoji: "⚽", color: "text-blue-500" },
-  { id: "basketball", name: "Basketball", icon: Award, emoji: "🏀", color: "text-red-500" },
-  { id: "tennis", name: "Tennis", icon: Disc, emoji: "🎾", color: "text-purple-500" },
+  { id: "all", label: "🌍 All Sports", icon: Activity },
+  { id: "cricket", label: "🏏 Cricket", icon: CircleDot },
+  { id: "football", label: "⚽ Football", icon: Trophy },
+  { id: "basketball", label: "🏀 Basketball", icon: Award },
+  { id: "tennis", label: "🎾 Tennis", icon: Disc },
 ];
 
 export default function SportTabs({ active, onChange }: SportTabsProps) {
   return (
-    <div className="flex overflow-x-auto gap-5 pb-8 px-2 scrollbar-hide no-scrollbar -mx-4 md:mx-0">
+    <div className="flex overflow-x-auto gap-5 pb-8 px-2 scrollbar-hide no-scrollbar -mx-4 md:mx-0" role="tablist" aria-label="Sports categories">
       {sports.map((sport) => {
         const isActive = active === sport.id;
         const Icon = sport.icon;
@@ -36,10 +36,10 @@ export default function SportTabs({ active, onChange }: SportTabsProps) {
                 ? "bg-green-600 text-white border-green-500 shadow-2xl shadow-green-600/40 scale-105"
                 : "bg-white dark:bg-zinc-900 text-gray-700 dark:text-zinc-400 border-gray-100 dark:border-zinc-800 hover:border-green-500/50 hover:bg-green-50 dark:hover:bg-green-950/30"
             }`}
-            aria-label={`Select ${sport.name} - tap to see scores`}
+            aria-label={`Select ${sport.label} - tap to see scores`}
           >
-            <span className="text-3xl md:text-4xl" aria-hidden="true">{sport.emoji}</span>
-            <span className="hidden sm:inline">{sport.name}</span>
+            <Icon size={28} className={isActive ? "text-white" : "text-gray-400"} aria-hidden="true" />
+            {sport.label}
           </button>
         );
       })}
@@ -51,8 +51,8 @@ export default function SportTabs({ active, onChange }: SportTabsProps) {
         className="flex-shrink-0 flex items-center gap-4 px-10 py-6 rounded-[2.5rem] font-bold text-xl md:text-2xl bg-purple-600 text-white shadow-2xl shadow-purple-600/30 hover:scale-105 transition-all duration-500"
         aria-label="Watch highlights - tap for videos"
       >
-        <span className="text-3xl md:text-4xl" aria-hidden="true">📺</span>
-        <span className="hidden sm:inline">Highlights</span>
+        <Disc size={28} className="animate-spin-slow" aria-hidden="true" />
+        📺 Highlights
       </Link>
 
       <Link
@@ -60,8 +60,8 @@ export default function SportTabs({ active, onChange }: SportTabsProps) {
         className="flex-shrink-0 flex items-center gap-4 px-10 py-6 rounded-[2.5rem] font-bold text-xl md:text-2xl bg-blue-600 text-white shadow-2xl shadow-blue-600/30 hover:scale-105 transition-all duration-500"
         aria-label="Learn how to watch free - tap for guide"
       >
-        <span className="text-3xl md:text-4xl" aria-hidden="true">🆓</span>
-        <span className="hidden sm:inline">Free Access</span>
+        <HelpCircle size={28} aria-hidden="true" />
+        🆓 Watch Free
       </Link>
     </div>
   );
