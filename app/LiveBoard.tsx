@@ -3,7 +3,8 @@ import { useEffect, useState, useCallback } from "react";
 import SportTabs from "@/components/SportTabs";
 import LiveMatchCard from "@/components/LiveMatchCard";
 import { UnifiedMatch } from "@/lib/api";
-import { Loader2, RefreshCw, AlertCircle } from "lucide-react";
+import { Loader2, RefreshCw, AlertCircle, Coffee, PlayCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function LiveBoard({ initialMatches }: { initialMatches: UnifiedMatch[] }) {
   const [sport, setSport] = useState<string>('all');
@@ -20,7 +21,7 @@ export default function LiveBoard({ initialMatches }: { initialMatches: UnifiedM
       const data = await res.json();
       setMatches(data);
     } catch (err) {
-      setError("Unable to update scores. Checking again in a moment...");
+      setError("Unable to sync scores. Don't worry, we're retrying! ☕");
       console.error(err);
     } finally {
       if (!isAuto) setLoading(false);
@@ -28,12 +29,10 @@ export default function LiveBoard({ initialMatches }: { initialMatches: UnifiedM
   }, [sport]);
 
   useEffect(() => {
-    // Skip initial fetch for 'all' as we have initialMatches
     if (sport !== 'all' || matches.length === 0) {
       loadData();
     }
-
-    const interval = setInterval(() => loadData(true), 45000); // 45s refresh
+    const interval = setInterval(() => loadData(true), 45000);
     return () => clearInterval(interval);
   }, [sport, loadData]);
 
@@ -41,46 +40,61 @@ export default function LiveBoard({ initialMatches }: { initialMatches: UnifiedM
     <>
       <SportTabs active={sport} onChange={setSport} />
       
-      <div className="flex items-center justify-between mb-12 mt-12">
-        <div className="flex items-center space-x-4">
-          <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
-          <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter italic text-white flex items-center gap-4">
+      <div className="flex items-center justify-between mb-12 mt-16 px-4">
+        <div className="flex items-center space-x-6">
+          <div className="relative">
+            <div className="w-4 h-4 rounded-full bg-red-500 animate-ping absolute inset-0 opacity-40" />
+            <div className="w-4 h-4 rounded-full bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.8)] relative z-10" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic text-white leading-none">
             Live Feed
-            {loading && <Loader2 className="animate-spin text-zinc-700 w-6 h-6" />}
           </h2>
         </div>
         
         <button 
           onClick={() => loadData()}
           disabled={loading}
-          className="bg-zinc-900 border border-zinc-800 p-3 rounded-2xl hover:bg-zinc-800 transition text-zinc-400 disabled:opacity-50"
-          title="Refresh Scores"
+          className="bg-white text-black p-4 rounded-2xl hover:bg-green-500 hover:text-white transition-all transform hover:rotate-12 active:scale-95 disabled:opacity-50 shadow-xl shadow-white/5"
+          title="Refresh Feed"
         >
-          <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
+          <RefreshCw size={24} className={loading ? "animate-spin" : ""} />
         </button>
       </div>
 
       {error && (
-        <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 px-6 py-4 rounded-[1.5rem] mb-12 flex items-center gap-3 text-sm font-bold uppercase italic tracking-widest">
-          <AlertCircle size={18} />
+        <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 px-8 py-6 rounded-[2.5rem] mb-12 flex items-center gap-4 text-base font-bold italic tracking-tight shadow-lg">
+          <AlertCircle size={24} />
           {error}
         </div>
       )}
 
       {loading && matches.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-40">
-          <Loader2 className="animate-spin text-green-500 mb-6" size={60} />
-          <p className="text-zinc-600 font-black uppercase italic tracking-widest text-sm">Syncing with World Events...</p>
+        <div className="flex flex-col items-center justify-center py-48 bg-zinc-900/20 rounded-[4rem] border border-zinc-900/50">
+          <Loader2 className="animate-spin text-green-500 mb-8" size={80} />
+          <p className="text-zinc-400 font-black uppercase italic tracking-[0.3em] text-xs">Calibrating Broadcasts...</p>
         </div>
       ) : (
         <div id="live-board-results" role="tabpanel" aria-labelledby={`tab-${sport}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {matches.length > 0 ? (
             matches.map((match) => <LiveMatchCard key={`${match.sport}-${match.id}`} match={match} />)
           ) : (
-            <div className="col-span-full py-40 text-center rounded-[3.5rem] border-2 border-dashed border-zinc-900 bg-zinc-950/30">
-              <div className="max-w-md mx-auto">
-                <p className="text-white text-3xl font-black uppercase italic mb-4 tracking-tighter">No Active Games</p>
-                <p className="text-zinc-500 font-medium leading-relaxed">It's quiet on the pitch right now. Check back soon for upcoming fixtures or select another sport.</p>
+            <div className="col-span-full py-40 px-10 text-center rounded-[4rem] border-2 border-dashed border-zinc-900 bg-zinc-950/20 shadow-inner">
+              <div className="max-w-xl mx-auto flex flex-col items-center">
+                <div className="bg-zinc-900 p-8 rounded-[3rem] mb-10 text-green-500 shadow-2xl">
+                   <Coffee size={80} strokeWidth={1} />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black uppercase italic text-white mb-6 tracking-tighter">No live action? <br />Grab a chai! ☕</h2>
+                <p className="text-zinc-500 text-lg font-medium leading-relaxed mb-12">
+                  The pitch is quiet right now. Why not relive some classic moments or plan your next legal viewing?
+                </p>
+                <div className="flex flex-wrap justify-center gap-6">
+                   <Link href="/highlights" className="bg-white text-black px-10 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-[10px] hover:bg-green-500 hover:text-white transition-all inline-flex items-center gap-3">
+                      <PlayCircle size={18} /> Watch Replays
+                   </Link>
+                   <Link href="/watch-free-legally" className="bg-zinc-800 text-white px-10 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-[10px] hover:bg-zinc-700 transition inline-flex items-center">
+                      Legal Guide
+                   </Link>
+                </div>
               </div>
             </div>
           )}
